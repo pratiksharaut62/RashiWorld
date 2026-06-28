@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './StockDetails.css';
-import sampleVideo from './assets/sampleVideo.mp4';
 
 const StockDetails = () => {
     
@@ -14,11 +13,12 @@ const StockDetails = () => {
         colours: "Multiple Colors Available",
         sizeRange: "S, M, L, XL, XXL",
         description: "A well-structured product catalog showcasing apparel categories, fabric details, size ranges, color options, and stock availability, allowing global buyers to efficiently browse collections and submit inquiries for bulk orders.",
+        // FIXED: Converted all media locations to clean, absolute public asset routes
         media: [
-            { id: 1, type: 'image', url: "src/assets/stock5.jpeg" },
-            { id: 2, type: 'image', url:  "src/assets/stock6.jpeg" },
-            { id: 3, type: 'image', url: "src/assets/stock2.jpeg" },
-            { id: 4, type: 'video', url: sampleVideo }
+            { id: 1, type: 'image', url: "/assets/stock5.jpeg" },
+            { id: 2, type: 'image', url: "/assets/stock6.jpeg" },
+            { id: 3, type: 'image', url: "/assets/stock2.jpeg" },
+            { id: 4, type: 'video', url: "/assets/sampleVideo.mp4" }
         ]
     };
 
@@ -44,10 +44,10 @@ const StockDetails = () => {
 
     // Formulate the WhatsApp API URL safely
     const whatsappBaseUrl = "https://wa.me/917709008441";
-const encodedMessage = encodeURIComponent(
-    `Hi Rashi Worldwide, I'm interested in [${stockData.title}]. Please share more details.`
-);
-const whatsappLink = `${whatsappBaseUrl}?text=${encodedMessage}`;
+    const encodedMessage = encodeURIComponent(
+        `Hi Rashi Worldwide, I'm interested in [${stockData.title}]. Please share more details.`
+    );
+    const whatsappLink = `${whatsappBaseUrl}?text=${encodedMessage}`;
 
     return (
         <div className="stock-detail-page">
@@ -164,7 +164,7 @@ const whatsappLink = `${whatsappBaseUrl}?text=${encodedMessage}`;
                             src="https://cdn-icons-png.flaticon.com/512/733/733585.png"
                             alt="WhatsApp Icon"
                             className="wa-btn-icon"
-                        />
+                        ></img>
                         Inquire on WhatsApp
                     </a>
                 </section>

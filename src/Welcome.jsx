@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './Welcome.css';
-import stock6 from './assets/stock6.jpeg';
 
 const Welcome = () => {
     const headingOptions = [
@@ -33,73 +32,75 @@ const Welcome = () => {
         return () => clearInterval(interval);
     }, [viewMode]);
 
+    // FIXED: Changed "src/assets/..." and object variables to static "/assets/..." paths
     const newArrivals = [
         {
             id: 1,
             title: "Classic Pure Linen Formal Shirt",
             tag: "Best Seller",
-            image: "src/assets/stock8.jpeg"
+            image: "/assets/stock8.jpeg"
         },
         {
             id: 2,
             title: "Premium Cotton Classic Regular Shirt",
             tag: "New",
-            image: "src/assets/stock5.jpeg"
+            image: "/assets/stock5.jpeg"
         },
         {
             id: 3,
             title: "Soft Cotton Casual Shirt",
             tag: "Limited",
-            image: "src/assets/stock12.jpeg"
+            image: "/assets/stock12.jpeg"
         },
         {
             id: 4,
             title: "Classic Slim-fit Shirt",
             tag: "Best Seller",
-            image: {stock6}
+            image: "/assets/stock6.jpeg"
         }
     ];
 
+    // FIXED: Changed all lookbook elements from "src/assets/..." to absolute "/assets/..." paths
     const lookbookItems = [
         {
             title: "U.S. POLO ASSN",
-            desc: "Established United States Polo Association in 1890.Official lifestyle and sports-inspired brand , Offers apparel for men, women,and children, Blends timeless style with modern fashion trends.",
-            image: "src/assets/stock13.jpeg"
+            desc: "Established United States Polo Association in 1890. Official lifestyle and sports-inspired brand. Offers apparel for men, women, and children. Blends timeless style with modern fashion trends.",
+            image: "/assets/stock13.jpeg"
         },
         {
             title: "Christian Dior",
-            desc: "Premium luxury 100% genuine Textured Knit Fabric.Uses high-quality materials such as silk, wool, cashmere, cotton, linen, velvel fabric.Exceptonal comfort and lasting Quality.",
-            image: "src/assets/stock2.jpeg"
+            desc: "Premium luxury 100% genuine Textured Knit Fabric. Uses high-quality materials such as silk, wool, cashmere, cotton, linen, velvet fabric. Exceptional comfort and lasting Quality.",
+            image: "/assets/stock2.jpeg"
         },
         {
-            title: "Christian Dior ",
-            desc: "Excellent Color retention and shape stability after proper care.Focus on elegant drape,refined texture and luxurious feel.",
-            image: "src/assets/stock9.jpeg"
+            title: "Christian Dior",
+            desc: "Excellent Color retention and shape stability after proper care. Focus on elegant drape, refined texture and luxurious feel.",
+            image: "/assets/stock9.jpeg"
         },
         {
             title: "Nike Jordan t-shirt",
-            desc: "Modern Athletic style with clean stiching and a premium finish.Export soft quality and durable fabric. Ethically sourced fibers that soften naturally over time with heavy industrial washes.",
-            image: "src/assets/stock7.jpeg"
+            desc: "Modern Athletic style with clean stitching and a premium finish. Export soft quality and durable fabric. Ethically sourced fibers that soften naturally over time with heavy industrial washes.",
+            image: "/assets/stock7.jpeg"
         },
         {
             title: "Hackett London Cotton Polo shirt",
-            desc: "Classic British-inspired design with elegant checks, stripes, or solid colors.Suitable for business, smart casual and everyday wear.",
-            image: "src/assets/stock4.jpeg"
+            desc: "Classic British-inspired design with elegant checks, stripes, or solid colors. Suitable for business, smart casual and everyday wear.",
+            image: "/assets/stock4.jpeg"
         },
         {
             title: "Lacoste Cotton Polo shirt",
             desc: "450 GSM unbrushed loopback cotton providing an armor-like structural drop. Tailored dropped shoulders paired with clean seamless side hems.",
-            image: "src/assets/stock3.jpeg"
+            image: "/assets/stock3.jpeg"
         },
         {
             title: "Rare Rabbit",
-            desc: "Premium Quality Turkish Linen Soft Hand Feel, Wash Soften Enzyme, Style Stiff Canvas Full Sleeves, 14 Colors Available, Size Available M,L,XL,XXL and Brand Packing Single Original Poly , 100% Good Quality.",
-            image: "src/assets/stock10.jpeg"
+            desc: "Premium Quality Turkish Linen Soft Hand Feel, Wash Soften Enzyme, Style Stiff Canvas Full Sleeves, 14 Colors Available, Size Available M,L,XL,XXL and Brand Packing Single Original Poly, 100% Good Quality.",
+            image: "/assets/stock10.jpeg"
         },
         {
-            title: "Nike Jorden Cotton t-shirt",
+            title: "Nike Jordan Cotton t-shirt",
             desc: "Crisp, cool luxury poplin fabric showcasing dropped architectural line silhouettes. Features extra-long plackets and clean premium collar stays.",
-            image: "src/assets/stock11.jpeg"
+            image: "/assets/stock11.jpeg"
         }
     ];
 
@@ -115,9 +116,6 @@ const Welcome = () => {
 
     return (
         <div className="storefront-container">
-            {/* Minimalist Bare Logo Bar */}
-
-
             {viewMode === 'storefront' ? (
                 /* --- ULTRA CLEAN CATALOG VIEW --- */
                 <div className="view-fade-wrapper">
@@ -182,7 +180,6 @@ const Welcome = () => {
                                 <span className="textile-spec-badge">TEXTILE SPECIFICATION</span>
                                 <h1 className="magazine-cloth-title">{currentLook.title}</h1>
                                 <p className="magazine-cloth-desc">{currentLook.desc}</p>
-
                             </div>
                         </div>
                     </div>
@@ -196,7 +193,6 @@ const Welcome = () => {
                     </button>
                 </div>
             )}
-
         </div>
     );
 };

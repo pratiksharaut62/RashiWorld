@@ -6,7 +6,7 @@ const Navbar = () => {
         <nav className="nav">
             <div className="nav-brand-group">
                 <div className="nav-logo">
-                    <img src="src/assets/logo.jpg" alt="Rashi Worldwide Logo" />
+                    <img src="/assets/logo.jpg" alt="Rashi Worldwide Logo" />
                 </div>
                 {/* Nested text container to clean up stacking and center alignment */}
                 <div className="nav-brand-text">
