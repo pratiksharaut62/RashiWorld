@@ -6,18 +6,18 @@ import sampleVideo from './assets/sampleVideo.mp4';
 const StockDetails = () => {
     
     const stockData = {
-        title: "Rashi Worldwide-Premium Clothing Exports ",
-        brand: "Puma, Nike, Lacoste, Under Armour, Adidas, Hermès, Custom",
+        title: "Rashi Worldwide - Premium Clothing Exports",
+        brand: "Puma, Nike, Lacoste, Rare Rabbit, U.S.Polo ASSN, Hackett, Under Armour, Adidas, Hermès, Custom",
         category: "T-shirt, Polo, Jacket, Track Pants, Cargo, Shorts, Hoodie, Other",
-        fabric: "Cotton Denim, T400 Denim,Rayon Fabric,Interlock Fabric,Cotton T-Shirt, Premium T400 Stretch Fabric with Heavy Zip",
+        fabric: "Cotton Denim, T400 Denim, Rayon Fabric, Interlock Fabric, Cotton T-Shirt, Premium T400 Stretch Fabric with Heavy Zip",
         moq: "50 Sets per colour",
         colours: "Multiple Colors Available",
         sizeRange: "S, M, L, XL, XXL",
-        description: "A well-structured product catalog showcasing apparel categories,fabric details,size ranges,color options,and stock availability,allowing global buyers to efficiently browse collections and submit inquiries for bulk orders. ",
+        description: "A well-structured product catalog showcasing apparel categories, fabric details, size ranges, color options, and stock availability, allowing global buyers to efficiently browse collections and submit inquiries for bulk orders.",
         media: [
-            { id: 1, type: 'image', url: 'https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=800&q=80' },
-            { id: 2, type: 'image', url: 'https://images.unsplash.com/photo-1544022613-e87ca75a784a?auto=format&fit=crop&w=800&q=80' },
-            { id: 3, type: 'image', url: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?auto=format&fit=crop&w=600&q=80' },
+            { id: 1, type: 'image', url: "src/assets/stock5.jpeg" },
+            { id: 2, type: 'image', url:  "src/assets/stock6.jpeg" },
+            { id: 3, type: 'image', url: "src/assets/stock2.jpeg" },
             { id: 4, type: 'video', url: sampleVideo }
         ]
     };
@@ -31,11 +31,8 @@ const StockDetails = () => {
 
     useEffect(() => {
         if (currentMedia.type === 'video' && videoRef.current) {
-            // Sync muted state directly to the DOM property
             videoRef.current.muted = isMuted;
 
-            // Remove .load() entirely. Let autoPlay do its job, 
-            // or attempt a fallback play assertion safely:
             const playPromise = videoRef.current.play();
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
@@ -46,11 +43,11 @@ const StockDetails = () => {
     }, [activeMediaIndex, currentMedia.type, isMuted]);
 
     // Formulate the WhatsApp API URL safely
-    const whatsappBaseUrl = "https://wa.me/1234567890";
-    const encodedMessage = encodeURIComponent(
-        `Hi Rashi Worldwide, I'm interested in [${stockData.title}]. Please share more details.`
-    );
-    const whatsappLink = `${whatsappBaseUrl}?text=${encodedMessage}`;
+    const whatsappBaseUrl = "https://wa.me/917709008441";
+const encodedMessage = encodeURIComponent(
+    `Hi Rashi Worldwide, I'm interested in [${stockData.title}]. Please share more details.`
+);
+const whatsappLink = `${whatsappBaseUrl}?text=${encodedMessage}`;
 
     return (
         <div className="stock-detail-page">
@@ -74,7 +71,6 @@ const StockDetails = () => {
                             />
                         ) : (
                             <div className="video-player-wrapper">
-                                {/* 💡 FIX 2: Restructured video container with key tracking and explicit source mime-type declaration */}
                                 <video
                                     key={currentMedia.url}
                                     ref={videoRef}
@@ -157,7 +153,7 @@ const StockDetails = () => {
                         <p className="line-break-text">{stockData.description}</p>
                     </div>
 
-                    {/* Direct High-Intent Call To Action */}
+                    {/* Single Direct WhatsApp Call To Action */}
                     <a
                         href={whatsappLink}
                         target="_blank"

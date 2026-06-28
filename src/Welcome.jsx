@@ -2,122 +2,200 @@ import React, { useState, useEffect } from 'react';
 import './Welcome.css';
 
 const Welcome = () => {
-    // Array of dynamic headings to rotate through or display based on stock updates
     const headingOptions = [
         "New Arrivals: Global Drop '26",
         "Just In: Minimalist Aesthetics",
         "Fresh Collection: Borderless Style",
         "Now Live: Premium Essentials"
     ];
-    
-    const [currentHeading, setCurrentHeading] = useState(headingOptions[0]);
 
-    // Simulating dynamic update mechanism (rotates headings every 5 seconds for demonstration)
+    const [currentHeading, setCurrentHeading] = useState(headingOptions[0]);
+    const [fadeState, setFadeState] = useState('fade-in');
+    const [viewMode, setViewMode] = useState('storefront');
+
+    // Manage single active lookbook item slide index
+    const [activeLookIndex, setActiveLookIndex] = useState(0);
+
     useEffect(() => {
+        if (viewMode !== 'storefront') return;
         const interval = setInterval(() => {
-            setCurrentHeading(prev => {
-                const currentIndex = headingOptions.indexOf(prev);
-                const nextIndex = (currentIndex + 1) % headingOptions.length;
-                return headingOptions[nextIndex];
-            });
+            setFadeState('fade-out');
+            setTimeout(() => {
+                setCurrentHeading(prev => {
+                    const currentIndex = headingOptions.indexOf(prev);
+                    const nextIndex = (currentIndex + 1) % headingOptions.length;
+                    return headingOptions[nextIndex];
+                });
+                setFadeState('fade-in');
+            }, 300);
         }, 5000);
         return () => clearInterval(interval);
-    }, []);
+    }, [viewMode]);
 
-    // Catalog items updated with prices in Rupees (₹)
     const newArrivals = [
         {
             id: 1,
-            title: "Classic Slim-Fit Twill Shirt",
+            title: "Classic Pure Linen Formal Shirt",
             tag: "Best Seller",
-            price: "₹3,150",
-            image: "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=600&q=80"
+            image: "src/assets/stock8.jpeg"
         },
         {
             id: 2,
-            title: "Premium Pima Cotton Set",
+            title: "Premium Cotton Classic Regular Shirt",
             tag: "New",
-            price: "₹1,799",
-            image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=600&q=80"
+            image: "src/assets/stock5.jpeg"
         },
         {
             id: 3,
-            title: "Pure Linen Breathable Formal Shirt",
+            title: "Soft Cotton Casual Shirt",
             tag: "Limited",
-            price: "₹4,199",
-            image: "https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=600&q=80"
+            image: "src/assets/stock12.jpeg"
         },
         {
             id: 4,
-            title: "Classic Silk Slip Dress",
+            title: "Classic Slim-fit Shirt",
             tag: "Best Seller",
-            price: "₹9,199",
-            image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=600&q=80"
+            image: "src/assets/stock6.jpeg"
         }
     ];
 
+    const lookbookItems = [
+        {
+            title: "U.S. POLO ASSN",
+            desc: "Established United States Polo Association in 1890.Official lifestyle and sports-inspired brand , Offers apparel for men, women,and children, Blends timeless style with modern fashion trends.",
+            image: "src/assets/stock13.jpeg"
+        },
+        {
+            title: "Christian Dior",
+            desc: "Premium luxury 100% genuine Textured Knit Fabric.Uses high-quality materials such as silk, wool, cashmere, cotton, linen, velvel fabric.Exceptonal comfort and lasting Quality.",
+            image: "src/assets/stock2.jpeg"
+        },
+        {
+            title: "Christian Dior ",
+            desc: "Excellent Color retention and shape stability after proper care.Focus on elegant drape,refined texture and luxurious feel.",
+            image: "src/assets/stock9.jpeg"
+        },
+        {
+            title: "Nike Jordan t-shirt",
+            desc: "Modern Athletic style with clean stiching and a premium finish.Export soft quality and durable fabric. Ethically sourced fibers that soften naturally over time with heavy industrial washes.",
+            image: "src/assets/stock7.jpeg"
+        },
+        {
+            title: "Hackett London Cotton Polo shirt",
+            desc: "Classic British-inspired design with elegant checks, stripes, or solid colors.Suitable for business, smart casual and everyday wear.",
+            image: "src/assets/stock4.jpeg"
+        },
+        {
+            title: "Lacoste Cotton Polo shirt",
+            desc: "450 GSM unbrushed loopback cotton providing an armor-like structural drop. Tailored dropped shoulders paired with clean seamless side hems.",
+            image: "src/assets/stock3.jpeg"
+        },
+        {
+            title: "Rare Rabbit",
+            desc: "Premium Quality Turkish Linen Soft Hand Feel, Wash Soften Enzyme, Style Stiff Canvas Full Sleeves, 14 Colors Available, Size Available M,L,XL,XXL and Brand Packing Single Original Poly , 100% Good Quality.",
+            image: "src/assets/stock10.jpeg"
+        },
+        {
+            title: "Nike Jorden Cotton t-shirt",
+            desc: "Crisp, cool luxury poplin fabric showcasing dropped architectural line silhouettes. Features extra-long plackets and clean premium collar stays.",
+            image: "src/assets/stock11.jpeg"
+        }
+    ];
+
+    const nextLook = () => {
+        setActiveLookIndex((prev) => (prev + 1) % lookbookItems.length);
+    };
+
+    const prevLook = () => {
+        setActiveLookIndex((prev) => (prev - 1 + lookbookItems.length) % lookbookItems.length);
+    };
+
+    const currentLook = lookbookItems[activeLookIndex];
+
     return (
         <div className="storefront-container">
-            {/* Brand Header Header Grid (Logo, Name, Tagline) */}
-            <div className="brand-header-strip">
-                <div className="brand-branding">
-                    <div className="brand-logo">R</div>
-                    <div>
-                        <h2 className="brand-main-title">Rashi Worldwide</h2>
-                        <p className="brand-tagline">anything anytime anywhere</p>
+            {/* Minimalist Bare Logo Bar */}
+
+
+            {viewMode === 'storefront' ? (
+                /* --- ULTRA CLEAN CATALOG VIEW --- */
+                <div className="view-fade-wrapper">
+                    <header className="hero-banner">
+                        <div className="hero-overlay">
+                            <span className="hero-subtitle">GLOBAL COUTURE</span>
+                            <blockquote className="brand-quote">
+                                "Fashion is a universal language. We weave comfort, culture, and timeless luxury into garments that speak to the world."
+                            </blockquote>
+                            <button className="hero-btn" onClick={() => { setViewMode('lookbook'); setActiveLookIndex(0); }}>
+                                View Editorial Lookbook
+                            </button>
+                        </div>
+                    </header>
+
+                    <section className="catalog-section">
+                        <div className="section-header">
+                            <h1 className={`dynamic-h1 ${fadeState}`}>{currentHeading}</h1>
+                        </div>
+
+                        <div className="products-grid">
+                            {newArrivals.map((item, index) => (
+                                <div
+                                    key={item.id}
+                                    className="product-card"
+                                    style={{ animationDelay: `${index * 0.05}s` }}
+                                    onClick={() => { setViewMode('lookbook'); setActiveLookIndex(index); }}
+                                >
+                                    <div className="image-wrapper">
+                                        <span className="product-badge">{item.tag}</span>
+                                        <img src={item.image} alt={item.title} className="product-img" />
+                                    </div>
+                                    <div className="product-details">
+                                        <h3 className="product-title">{item.title}</h3>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                </div>
+            ) : (
+                /* --- FULL SCREEN MAGAZINE-STYLE IMMERSIVE LOOKBOOK --- */
+                <div className="fullscreen-lookbook-view">
+                    {/* Header Action Row */}
+                    <div className="lookbook-top-bar">
+                        <button className="minimal-close-btn" onClick={() => setViewMode('storefront')}>
+                            ✕ Close Lookbook
+                        </button>
+                        <div className="lookbook-pagination">
+                            0{activeLookIndex + 1} <span>/ 0{lookbookItems.length}</span>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            {/* Cinematic Hero Section */}
-            <header className="hero-banner">
-                <div className="hero-overlay">
-                    <span className="hero-subtitle">GLOBAL COUTURE</span>
-                    <blockquote className="brand-quote">
-                        "Fashion is a universal language. We weave comfort, culture, and timeless luxury into garments that speak to the world."
-                    </blockquote>
-                    <button className="hero-btn">Explore Lookbook</button>
-                </div>
-            </header>
+                    {/* Main Fullscreen Stage Frame */}
+                    <div className="lookbook-magazine-stage" key={activeLookIndex}>
+                        <div className="magazine-media-pane">
+                            <img src={currentLook.image} alt={currentLook.title} className="magazine-img" />
+                        </div>
 
-            {/* New Arrivals Section with Dynamic H1 */}
-            <section className="catalog-section">
-                <div className="section-header">
-                    <h1 className="dynamic-h1">{currentHeading}</h1>
-                    <p className="section-subtitle">Handpicked aesthetics updated in real-time across our international warehouses.</p>
-                </div>
+                        <div className="magazine-content-pane">
+                            <div className="content-inner-wrapper">
+                                <span className="textile-spec-badge">TEXTILE SPECIFICATION</span>
+                                <h1 className="magazine-cloth-title">{currentLook.title}</h1>
+                                <p className="magazine-cloth-desc">{currentLook.desc}</p>
 
-                <div className="products-grid">
-                    {newArrivals.map((item) => (
-                        <div key={item.id} className="product-card">
-                            <div className="image-wrapper">
-                                <span className="product-badge">{item.tag}</span>
-                                <img src={item.image} alt={item.title} className="product-img" />
-                                {/* 💡 REMOVED: card-hover-overlay container and Add to Cart button */}
-                            </div>
-                            <div className="product-details">
-                                <h3 className="product-title">{item.title}</h3>
-                                <p className="product-price">{item.price}</p>
                             </div>
                         </div>
-                    ))}
-                </div>
-            </section>
+                    </div>
 
-            {/* Floating Sticky WhatsApp Button */}
-            <a 
-                href="https://wa.me/1234567890?text=Hi%20Rashi%20Worldwide!%20I%27m%20interested%20in%20your%20new%20arrivals." 
-                className="whatsapp-sticky-btn"
-                target="_blank" 
-                rel="noopener noreferrer"
-                title="Chat with us"
-            >
-                <img 
-                    src="https://cdn-icons-png.flaticon.com/512/733/733585.png" 
-                    alt="WhatsApp support" 
-                />
-                <span className="whatsapp-badge">Support Online</span>
-            </a>
+                    {/* Left & Right Absolute Navigation Controls */}
+                    <button className="nav-arrow-control prev-arrow" onClick={prevLook} aria-label="Previous look">
+                        ‹
+                    </button>
+                    <button className="nav-arrow-control next-arrow" onClick={nextLook} aria-label="Next look">
+                        ›
+                    </button>
+                </div>
+            )}
+
         </div>
     );
 };

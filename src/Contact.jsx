@@ -9,70 +9,62 @@ const Contact = () => {
         {
             name: "WhatsApp",
             icon: "https://cdn-icons-png.flaticon.com/512/733/733585.png",
-            // Fixed the URL path by explicitly adding the trailing forward slash
             url: `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`,
-            color: "#25D366",
+            color: "#25D366", 
             subtitle: "Instant Chat Support",
-            actionText: "Inquire Now →"
+            actionText: "Inquire Now"
         },
         {
             name: "Instagram",
             icon: "https://cdn-icons-png.flaticon.com/512/174/174855.png",
-            // Fixed the profile redirect path 
             url: `https://instagram.com/${instagramUsername}`,
-            color: "#E1306C",
+            color: "#E84D0E", 
             subtitle: `@${instagramUsername}`,
-            actionText: "View Lookbook →"
+            actionText: "View Lookbook"
         },
         {
             name: "Call Mobile",
             icon: "https://cdn-icons-png.flaticon.com/512/597/597177.png",
             url: `tel:${phone}`,
-            color: "#007AFF",
+            color: "#E84D0E", 
             subtitle: phone,
-            actionText: "Call Directly →"
+            actionText: "Call Directly"
         }
     ];
 
     return (
         <div className="contact-page-wrapper">
-            {/* Upper Presentation Panel */}
+            {/* Minimal Minimalist Header */}
             <div className="contact-hero-panel">
-                <div className="hero-glow-element"></div>
-                
-                {/* Brand Identity elements embedded natively */}
-                <div className="contact-brand-header">
-                    <div className="contact-brand-logo">R</div>
-                    <h1 className="contact-company-title">Rashi Worldwide</h1>
-                    <p className="contact-brand-tagline">anything anytime anywhere</p>
-                </div>
-
+                <span className="contact-brand-tagline">Rashi Worldwide</span>
+                <h1 className="contact-company-title">anything anytime anywhere</h1>
                 <p className="contact-blurb-text">
-                    An elite international apparel exporter with over 10+ years of industrial expertise. We specialize in luxury premium manufacturing and scale logistics to reliably ship worldwide.
+                    An elite apparel exporter specializing in luxury premium manufacturing and reliable worldwide logistics. Over 10+ years of industrial expertise.
                 </p>
             </div>
             
-            {/* Interactive Grid Distribution */}
+            {/* Flat Row System (No Big Boxes) */}
             <div className="contact-links-panel">
-                <div className="contact-grid">
+                <div className="contact-row-container">
                     {channels.map((channel, index) => (
                         <a 
                             key={index} 
                             href={channel.url} 
                             target="_blank" 
                             rel="noopener noreferrer" 
-                            className={`contact-card ${channel.name === "WhatsApp" ? "primary-highlight-card" : ""}`}
-                            style={{ '--hover-color': channel.color }}
+                            className="contact-row-item"
+                            style={{ '--accent-color': channel.color }}
                         >
-                            <div className="icon-wrapper">
-                                <img src={channel.icon} alt={`${channel.name} icon`} className="contact-icon" />
+                            <div className="row-left-content">
+                                <img src={channel.icon} alt={channel.name} className="contact-row-icon" />
+                                <div className="row-text-block">
+                                    <span className="channel-name">{channel.name}</span>
+                                    <span className="channel-subtitle">{channel.subtitle}</span>
+                                </div>
                             </div>
-                            <div className="card-info">
-                                <span className="channel-name">{channel.name}</span>
-                                <span className="channel-subtitle">{channel.subtitle}</span>
-                                <span className="channel-action" style={{ color: channel.color }}>
-                                    {channel.actionText}
-                                </span>
+                            <div className="channel-action">
+                                <span className="action-text">{channel.actionText}</span>
+                                <span className="action-arrow">→</span>
                             </div>
                         </a>
                     ))}
@@ -80,8 +72,10 @@ const Contact = () => {
             </div>
 
             <div className="contact-disclaimer-bar">
-                * Zero contact forms required. Secure B2B purchase distribution is processed entirely via our encrypted active communication channels.
+                * Secure B2B purchase distribution is processed entirely via our active digital channels. Zero contact forms required.
             </div>
+        
+
         </div>
     );
 };

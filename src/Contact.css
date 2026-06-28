@@ -1,206 +1,186 @@
-/* ==========================================
-   PRODUCTION READY INTERACTIVE CONTACT GRID
-   ========================================== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-main: 'Plus Jakarta Sans', sans-serif;
+  --bg-page: #FAFAFA;
+  --border-line: #EEEEEE;
+  
+  --text-heading: #111111;
+  --text-paragraph: #666666;
+  --color-primary-orange: #E84D0E;
+}
 
 .contact-page-wrapper {
-    background-color: #0b0f19; /* Midnight luxury background matching storefront */
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 4rem 2rem;
-    color: #f8fafc;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    box-sizing: border-box;
+  font-family: var(--font-main);
+  background-color: var(--bg-page);
+  min-height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  box-sizing: border-box;
 }
 
-/* 1. Header Hero Structure */
+/* ==========================================================================
+   Header Section (Bold & Readable)
+   ========================================================================== */
 .contact-hero-panel {
-    position: relative;
-    text-align: center;
-    max-width: 600px;
-    margin-bottom: 3.5rem;
-    z-index: 1;
-}
-
-/* Background ambient blur decoration */
-.hero-glow-element {
-    position: absolute;
-    top: -50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 250px;
-    height: 250px;
-    background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, rgba(0,0,0,0) 70%);
-    z-index: -1;
-    pointer-events: none;
-}
-
-.contact-brand-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 1.5rem;
-}
-
-.contact-brand-logo {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
-    color: #0f172a;
-    font-size: 2rem;
-    font-weight: 800;
-    width: 55px;
-    height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 14px;
-    margin-bottom: 1rem;
-    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.2);
-}
-
-.contact-company-title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin: 0;
-    letter-spacing: -0.02em;
-    color: #ffffff;
+  text-align: center;
+  max-width: 580px;
+  margin-bottom: 2.5rem;
+  animation: fadeInFlat 0.4s ease-out;
 }
 
 .contact-brand-tagline {
-    color: #94a3b8;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.25em;
-    margin: 0.5rem 0 0 0;
-    font-weight: 600;
+  color: #E84D0E;
+  text-transform: uppercase;
+  font-size: 2.4rem; /* Scaled up from 0.65rem */
+  font-weight: 700;
+  letter-spacing: normal;
+  display: block;
+  margin-bottom: 0.6rem;
+  font-family: Plus Jakatara Sans;
+}
+
+.contact-company-title  {
+  color:#E84D0E;  
+  font-size: 1rem; /* Scaled up from 2.0rem */
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.1;
 }
 
 .contact-blurb-text {
-    font-size: 1.1rem;
-    color: #cbd5e1;
-    line-height: 1.6;
-    margin: 1rem 0 0 0;
+  color: var(--text-paragraph);
+  font-size: 1.05rem; /* Scaled up from 0.9rem */
+  line-height: 1.5;
+  margin-top: 1rem;
 }
 
-/* 2. Grid & Interactive Links Panels */
+/* ==========================================================================
+   Tight-Gap Row Layout (Brings actions and text closer)
+   ========================================================================== */
 .contact-links-panel {
-    width: 100%;
-    max-width: 800px;
+  width: 100%;
+  max-width: 620px; /* Reduced container width to naturally eliminate empty dead space gap */
+  margin-bottom: 2.5rem;
 }
 
-.contact-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.5rem;
-    width: 100%;
+.contact-row-container {
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid var(--text-heading); /* Bold top bounding line for high contrast */
 }
 
-/* Card Styling Framework */
-.contact-card {
-    background: #0f172a;
-    border: 1px solid #1e293b;
-    border-radius: 16px;
-    padding: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.2rem;
-    text-decoration: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    overflow: hidden;
+.contact-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 0.75rem; /* Enhanced padding for a luxurious link footprint */
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-line);
+  transition: background-color 0.2s ease, padding-left 0.2s ease;
 }
 
-/* Clean Dynamic Hover Glow effect */
-.contact-card:hover {
-    transform: translateY(-4px);
-    border-color: var(--hover-color);
-    box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.5);
-    background: #131e35;
+.contact-row-item:hover {
+  background-color: rgba(0, 0, 0, 0.015);
+  padding-left: 1.25rem; /* Premium micro slide forward interaction */
 }
 
-/* Visual prominence treatment for WhatsApp */
-.primary-highlight-card {
-    border-color: rgba(37, 211, 102, 0.25);
-    background: linear-gradient(180deg, #0f172a 0%, rgba(37, 211, 102, 0.03) 100%);
+.row-left-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem; /* Optimized comfortable gap spacing next to graphic assets */
 }
 
-.icon-wrapper {
-    background: #1e293b;
-    width: 52px;
-    height: 52px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: background 0.3s ease;
+.contact-row-icon {
+  width: 26px; /* Increased from 22px */
+  height: 26px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
 }
 
-.contact-card:hover .icon-wrapper {
-    background: #0f172a;
+.contact-row-item:hover .contact-row-icon {
+  transform: scale(1.1);
 }
 
-.contact-icon {
-    width: 26px;
-    height: 26px;
-    object-fit: contain;
-}
-
-.card-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    text-align: left;
+.row-text-block {
+  display: flex;
+  flex-direction: column;
 }
 
 .channel-name {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: #ffffff;
+  color: var(--text-heading);
+  font-size: 1.3rem; /* Scaled up from 1.05rem */
+  font-weight: 700;
 }
 
 .channel-subtitle {
-    font-size: 0.9rem;
-    color: #64748b;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 160px;
+  color: var(--text-paragraph);
+  font-size: 1rem; /* Scaled up from 0.85rem */
+  margin-top: 2px;
 }
 
+/* ==========================================================================
+   Action & Checkpoints Block
+   ========================================================================== */
 .channel-action {
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 0.3rem;
-    letter-spacing: 0.02em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem; /* Scaled up from 0.85rem */
+  font-weight: 600;
+  color: var(--text-paragraph);
+  transition: color 0.2s ease;
 }
 
-/* 3. Footer Details Row */
+.action-arrow {
+  color: #999999;
+  font-size: 1.2rem;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+/* Dynamic color feedback on row focus */
+.contact-row-item:hover .action-text {
+  color: var(--text-heading);
+}
+
+.contact-row-item:hover .action-arrow {
+  transform: translateX(4px);
+  color: var(--accent-color);
+}
+
+/* ==========================================================================
+   Footer Disclaimer
+   ========================================================================== */
 .contact-disclaimer-bar {
-    margin-top: 4rem;
-    font-size: 0.8rem;
-    color: #475569;
-    text-align: center;
-    max-width: 500px;
-    line-height: 1.5;
+  color: var(--text-paragraph);
+  font-size: 0.85rem; /* Scaled up from 0.75rem */
+  text-align: center;
+  max-width: 500px;
+  opacity: 0.65;
+  line-height: 1.4;
 }
 
-/* Responsive Structural Modifications */
-@media (max-width: 640px) {
-    .contact-page-wrapper {
-        padding: 3rem 1rem;
-    }
-    .contact-company-title {
-        font-size: 2rem;
-    }
-    .contact-blurb-text {
-        font-size: 1rem;
-    }
-    .contact-grid {
-        grid-template-columns: 1fr;
-    }
-    .channel-subtitle {
-        max-width: 100%;
-    }
+@keyframes fadeInFlat {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Adaptive Viewports */
+@media (max-width: 580px) {
+  .contact-page-wrapper {
+    padding: 2rem 1rem;
+  }
+  .contact-company-title {
+    font-size: 2rem;
+  }
+  .channel-name {
+    font-size: 1.15rem;
+  }
+  .channel-subtitle, .channel-action {
+    font-size: 0.9rem;
+  }
 }

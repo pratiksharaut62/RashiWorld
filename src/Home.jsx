@@ -1,16 +1,33 @@
 import React from "react";
 import Navbar from "./Navbar";
 import { Outlet } from "react-router-dom";
-import "./Home.css"; // We will add global container styles here
+import "./Home.css"; 
 
 function Home() {
+    // Correctly structured click-to-chat API string
+    const whatsappNumber = "917709008441";
+    const whatsappMessage = encodeURIComponent("Hello Rashi Worldwide, I have a Product inquiry.");
+
     return (
         <div className="app-layout">
             <Navbar />
+            
             <main className="page-content">
-                {/* Your e-commerce store content drops right here */}
                 <Outlet />
             </main>
+
+            {/* FLOATING STICKY WHATSAPP BUTTON */}
+            <a 
+                href={`https://wa.me/${whatsappNumber}?text=${whatsappMessage}`}
+                className="sticky-whatsapp"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Chat with us on WhatsApp"
+            >
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.713-1.457L0 24zm6.59-4.846c1.6.95 3.488 1.449 5.421 1.451 5.441.002 9.869-4.366 9.872-9.713.001-2.591-1.005-5.027-2.835-6.861-1.829-1.832-4.261-2.84-6.854-2.841-5.442 0-9.87 4.367-9.873 9.715-.001 1.97.514 3.896 1.496 5.607L2.733 21.3l4.914-1.285zm11.367-4.664c-.197-.1-.1.33-.2-.433-.099-.1-.591-.295-.985-.492-.394-.197-2.365-1.183-2.71-1.331-.345-.149-.591-.223-.838.149-.246.371-.96 1.183-1.182 1.43-.222.246-.443.271-.838.075-.394-.197-1.666-.621-3.172-1.983-1.172-1.066-1.963-2.383-2.194-2.777-.232-.394-.025-.607.173-.804.178-.178.394-.468.591-.702.197-.234.263-.401.394-.669.132-.268.066-.503-.033-.702-.099-.197-.838-2.046-1.15-2.786-.304-.724-.613-.626-.838-.638-.217-.012-.466-.014-.715-.014-.249 0-.656.094-.999.475-.344.381-1.31 1.296-1.31 3.161 0 1.865 1.344 3.667 1.531 3.918.187.25 2.645 4.112 6.407 5.765.895.394 1.594.63 2.14.806.9.29 1.719.249 2.366.151.721-.11 2.225-.921 2.535-1.811.31-.891.31-1.654.217-1.811-.093-.158-.344-.257-.74-.455z"/>
+                </svg>
+            </a>
         </div>
     );
 }
