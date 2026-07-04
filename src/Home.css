@@ -1,66 +1,85 @@
-/* Import Google Font directly into global layout */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
-
-.app-layout {
+/* ==========================================
+   1. MAIN APP LAYOUT (Sticky Footer Fix)
+   ========================================== */
+.app-container {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background-color: #FAFAFA; /* Specified Page Background */
+    min-height: 100vh; /* Forces container to take full screen height */
     position: relative;
 }
 
 .page-content {
-    flex: 1;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 32px 20px;
-    box-sizing: border-box;
+    flex: 1; /* Pushes the footer down if content is short */
 }
 
-/* STICKY WHATSAPP BUTTON STYLES */
+.app-footer {
+    background-color: #f1f1f1; /* Adjust to match your design */
+    padding: 20px;
+    width: 100%;
+}
+
+/* ==========================================
+   2. HAMBURGER MENU (Positioned to the Left)
+   ========================================== */
+.hamburger-menu-btn {
+    position: fixed;
+    top: 20px;
+    left: 20px; /* Shifted to the left side */
+    z-index: 1000; /* Keeps it above everything else */
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.bar {
+    width: 30px;
+    height: 4px;
+    background-color: #333;
+    transition: all 0.3s ease;
+}
+
+/* Sidebar behavior adjustments */
+.sidebar-options {
+    position: fixed;
+    top: 0;
+    left: -250px; /* Starts hidden off-screen to the left */
+    width: 250px;
+    height: 100%;
+    background-color: #fff;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.2);
+    transition: left 0.3s ease;
+    z-index: 999;
+}
+
+.sidebar-options.active {
+    left: 0; /* Slides in from the left */
+}
+
+/* ==========================================
+   3. FLOATING WHATSAPP BUTTON (Fixed & Elevated)
+   ========================================== */
 .sticky-whatsapp {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: #25D366; /* Specified Brand WhatsApp Green */
-    color: #FFFFFF;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%; /* Floating icon circle */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 16px rgba(37, 211, 102, 0.35);
-    z-index: 2000;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+    bottom: 30px; /* Distance from the very bottom of the screen */
+    right: 30px;  /* Keeps it in the corner */
+    z-index: 1001; /* Higher than sidebar & overlay so it remains clickable */
+    transition: transform 0.2s ease;
 }
 
 .sticky-whatsapp:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+    transform: scale(1.1);
 }
 
-.sticky-whatsapp svg {
-    width: 32px;
-    height: 32px;
-}
-
-/* Ensure child layout items like dynamic inputs or cards honor the border radius */
-input, button, .card, .panel {
-    border-radius: 12px !important;
-}
-
-@media (max-width: 480px) {
-    .sticky-whatsapp {
-        bottom: 20px;
-        right: 20px;
-        width: 54px;
-        height: 54px;
-    }
-    .sticky-whatsapp svg {
-        width: 28px;
-        height: 28px;
-    }
+/* Overlay for sidebar */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 998;
 }

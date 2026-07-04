@@ -12,19 +12,18 @@ const AdminDashboard = () => {
     const [stockItems, setStockItems] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    // Form inputs streamlined to map directly to your 5 schema columns
+    // Form inputs streamlined to map directly to your 4 schema columns
     const [newStock, setNewStock] = useState({
         title: '', 
-        category: '', 
+        brand: '', 
         status: 'Active', 
-        expiryDate: '',
-        actionField: '' // Mapped to the "Action" column in your schema
+        expiry: '',
     });
 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editingItem, setEditingItem] = useState(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [itemToDelete, setItemToDelete] = useState(null); // Holds the string "Product Title"
+    const [itemToDelete, setItemToDelete] = useState(null); // Holds the string "title"
 
     const [globalSettings, setGlobalSettings] = useState({
         brandName: "Rashi Worldwide",
@@ -66,9 +65,9 @@ const AdminDashboard = () => {
     const fetchStockItems = async () => {
         setIsLoading(true);
         const { data, error } = await supabase
-            .from('stock_table')
+            .from('stocks')
             .select('*')
-            .order('Product Title', { ascending: true }); // Sorting by your valid primary key column
+            .order('title', { ascending: true }); // Sorting by title column
 
         if (error) {
             console.error("Fetch Error:", error.message);
@@ -82,19 +81,18 @@ const AdminDashboard = () => {
     // CREATE
     const handleAddStock = async (e) => {
         e.preventDefault();
-        if (!newStock.title || !newStock.category) {
-            return alert("Product Title and Category are required by your database schema.");
+        if (!newStock.title || !newStock.brand) {
+            return alert("Product Title and Brand are required by your database schema.");
         }
 
         const { data, error } = await supabase
-            .from('stock_table')
+            .from('stocks')
             .insert([
                 {
-                    "Product Title": newStock.title,
-                    "Category": newStock.category,
-                    "Status": newStock.status,
-                    "Expiry": newStock.expiryDate || null,
-                    "Action": newStock.actionField || null
+                    title: newStock.title,
+                    brand: newStock.brand,
+                    status: newStock.status,
+                    expiry: newStock.expiry || null
                 }
             ])
             .select();
@@ -105,7 +103,7 @@ const AdminDashboard = () => {
         } else {
             if (data && data.length > 0) setStockItems(prev => [data[0], ...prev]);
             // Reset state
-            setNewStock({ title: '', category: '', status: 'Active', expiryDate: '', actionField: '' });
+            setNewStock({ title: '', brand: '', status: 'Active', expiry: '' });
         }
     };
 
@@ -114,15 +112,15 @@ const AdminDashboard = () => {
         const nextStatus = currentStatus === 'Active' ? 'Hidden' : 'Active';
 
         const { error } = await supabase
-            .from('stock_table')
-            .update({ "Status": nextStatus }) 
-            .eq('Product Title', productTitle);
+            .from('stocks')
+            .update({ status: nextStatus }) 
+            .eq('title', productTitle);
 
         if (error) {
             console.error("Update Visibility Error:", error.message);
             alert("Failed to change status: " + error.message);
         } else {
-            setStockItems(prev => prev.map(item => item["Product Title"] === productTitle ? { ...item, "Status": nextStatus } : item));
+            setStockItems(prev => prev.map(item => item.title === productTitle ? { ...item, status: nextStatus } : item));
         }
     };
 
@@ -131,20 +129,19 @@ const AdminDashboard = () => {
         e.preventDefault();
 
         const { error } = await supabase
-            .from('stock_table')
+            .from('stocks')
             .update({
-                "Category": editingItem["Category"],
-                "Status": editingItem["Status"],
-                "Expiry": editingItem["Expiry"] || null,
-                "Action": editingItem["Action"] || null
+                brand: editingItem.brand,
+                status: editingItem.status,
+                expiry: editingItem.expiry || null,
             })
-            .eq('Product Title', editingItem["Product Title"]); // Matches using exact primary key string
+            .eq('title', editingItem.title); // Matches using exact primary key string
 
         if (error) {
             console.error("Error updating item:", error.message);
             alert("Failed to update record: " + error.message);
         } else {
-            setStockItems(prev => prev.map(item => item["Product Title"] === editingItem["Product Title"] ? editingItem : item));
+            setStockItems(prev => prev.map(item => item.title === editingItem.title ? editingItem : item));
             setIsEditModalOpen(false);
             setEditingItem(null);
         }
@@ -153,15 +150,15 @@ const AdminDashboard = () => {
     // DELETE
     const executeDelete = async () => {
         const { error } = await supabase
-            .from('stock_table')
+            .from('stocks')
             .delete()
-            .eq('Product Title', itemToDelete); // target deletion via primary key
+            .eq('title', itemToDelete); // target deletion via primary key
 
         if (error) {
             console.error("Error deleting data:", error.message);
             alert("Failed to clear database record: " + error.message);
         } else {
-            setStockItems(prev => prev.filter(item => item["Product Title"] !== itemToDelete));
+            setStockItems(prev => prev.filter(item => item.title !== itemToDelete));
             setIsDeleteModalOpen(false);
             setItemToDelete(null);
         }
@@ -194,10 +191,10 @@ const AdminDashboard = () => {
     };
 
     const getStatusBadge = (item) => {
-        if (item["Status"] === 'Hidden') return <span className="status-badge badge-hidden">Hidden</span>;
-        if (!item["Expiry"]) return <span className="status-badge badge-active">Active</span>;
+        if (item.status === 'Hidden') return <span className="status-badge badge-hidden">Hidden</span>;
+        if (!item.expiry) return <span className="status-badge badge-active">Active</span>;
 
-        const diffDays = Math.ceil((new Date(item["Expiry"]) - new Date()) / (1000 * 3600 * 24));
+        const diffDays = Math.ceil((new Date(item.expiry) - new Date()) / (1000 * 3600 * 24));
         if (diffDays >= 0 && diffDays <= 3) {
             return <span className="status-badge badge-expiring"><span className="pulse-dot"></span>Expiring Soon</span>;
         }
@@ -259,26 +256,26 @@ const AdminDashboard = () => {
                                         <table className="admin-crud-table">
                                             <thead>
                                                 <tr>
-                                                    <th>Product Title</th><th>Category</th><th>Status</th><th>Expiry</th><th style={{ textAlign: 'right' }}>Actions</th>
+                                                    <th>Title</th><th>Brand</th><th>Status</th><th>Expiry</th><th style={{ textAlign: 'right' }}>Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {stockItems.map(item => (
-                                                    <tr key={item["Product Title"]}>
-                                                        <td><div className="font-bold">{item["Product Title"]}</div></td>
-                                                        <td><span className="category-tag">{item["Category"] || "General"}</span></td>
+                                                    <tr key={item.title}>
+                                                        <td><div className="font-bold">{item.title}</div></td>
+                                                        <td><span className="category-tag">{item.brand || "General"}</span></td>
                                                         <td>{getStatusBadge(item)}</td>
-                                                        <td className="font-mono text-muted">{item["Expiry"] || 'N/A'}</td>
+                                                        <td className="font-mono text-muted">{item.expiry || 'N/A'}</td>
                                                         <td className="actions-cell">
                                                             <button className="action-icon-btn" onClick={() => openEditModal(item)}>Edit</button>
-                                                            <button className="action-icon-btn" onClick={() => handleToggleVisibility(item["Product Title"], item["Status"])}>{item["Status"] === 'Active' ? 'Hide' : 'Show'}</button>
-                                                            <button className="action-icon-btn delete" onClick={() => openDeleteModal(item["Product Title"])}>Delete</button>
+                                                            <button className="action-icon-btn" onClick={() => handleToggleVisibility(item.title, item.status)}>{item.status === 'Active' ? 'Hide' : 'Show'}</button>
+                                                            <button className="action-icon-btn delete" onClick={() => openDeleteModal(item.title)}>Delete</button>
                                                         </td>
                                                     </tr>
                                                 ))}
                                                 {stockItems.length === 0 && (
                                                     <tr>
-                                                        <td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#999' }}>No inventory matches found in stock_table.</td>
+                                                        <td colSpan="5" style={{ textAlign: 'center', padding: '2rem', color: '#999' }}>No inventory matches found in stocks table.</td>
                                                     </tr>
                                                 )}
                                             </tbody>
@@ -291,9 +288,8 @@ const AdminDashboard = () => {
                                 <h3>Publish New Stock Entry</h3>
                                 <form onSubmit={handleAddStock} className="crud-grid-form">
                                     <div className="input-group full-width"><label>Stock Line Title *</label><input type="text" name="title" value={newStock.title} onChange={handleInputChange} placeholder="e.g., Silk Slip Dress Collection" required /></div>
-                                    <div className="input-group"><label>Category Tag *</label><input type="text" name="category" value={newStock.category} onChange={handleInputChange} placeholder="Trending, Limited..." required /></div>
-                                    <div className="input-group"><label>Expiry Date</label><input type="date" name="expiryDate" value={newStock.expiryDate} onChange={handleInputChange} /></div>
-                                    <div className="input-group"><label>Action Context Note</label><input type="text" name="actionField" value={newStock.actionField} onChange={handleInputChange} placeholder="Optional structural notes" /></div>
+                                    <div className="input-group"><label>Brand *</label><input type="text" name="brand" value={newStock.brand} onChange={handleInputChange} placeholder="e.g., Nike, Zara..." required /></div>
+                                    <div className="input-group"><label>Expiry Date</label><input type="date" name="expiry" value={newStock.expiry} onChange={handleInputChange} /></div>
                                     
                                     <div className="full-width"><button type="submit" className="admin-action-btn primary-btn">Save to Supabase</button></div>
                                 </form>
@@ -346,26 +342,22 @@ const AdminDashboard = () => {
                         <form onSubmit={handleSaveEdit} className="crud-grid-form mt-4">
                             <div className="input-group full-width">
                                 <label>Product Title (Primary Key Bound)</label>
-                                <input type="text" value={editingItem["Product Title"]} disabled style={{ background: '#eee', cursor: 'not-allowed' }} />
+                                <input type="text" value={editingItem.title} disabled style={{ background: '#eee', cursor: 'not-allowed' }} />
                             </div>
                             <div className="input-group">
-                                <label>Category</label>
-                                <input type="text" value={editingItem["Category"] || ''} onChange={(e) => setEditingItem(prev => ({ ...prev, "Category": e.target.value }))} required />
+                                <label>Brand</label>
+                                <input type="text" value={editingItem.brand || ''} onChange={(e) => setEditingItem(prev => ({ ...prev, brand: e.target.value }))} required />
                             </div>
                             <div className="input-group">
                                 <label>Status</label>
-                                <select value={editingItem["Status"] || 'Active'} onChange={(e) => setEditingItem(prev => ({ ...prev, "Status": e.target.value }))}>
+                                <select value={editingItem.status || 'Active'} onChange={(e) => setEditingItem(prev => ({ ...prev, status: e.target.value }))}>
                                     <option value="Active">Active</option>
                                     <option value="Hidden">Hidden</option>
                                 </select>
                             </div>
                             <div className="input-group">
                                 <label>Expiry Date</label>
-                                <input type="date" value={editingItem["Expiry"] || ''} onChange={(e) => setEditingItem(prev => ({ ...prev, "Expiry": e.target.value }))} />
-                            </div>
-                            <div className="input-group">
-                                <label>Action Field</label>
-                                <input type="text" value={editingItem["Action"] || ''} onChange={(e) => setEditingItem(prev => ({ ...prev, "Action": e.target.value }))} />
+                                <input type="date" value={editingItem.expiry || ''} onChange={(e) => setEditingItem(prev => ({ ...prev, expiry: e.target.value }))} />
                             </div>
                             <div className="modal-actions-wrapper full-width">
                                 <button type="button" className="modal-btn cancel" onClick={() => setIsEditModalOpen(false)}>Cancel</button>

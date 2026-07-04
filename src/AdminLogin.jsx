@@ -13,18 +13,29 @@ const AdminLogin = ({ onLoginSuccess }) => {
         setError('');
         setIsLoading(true);
 
-        // Authenticate directly through your secure Supabase Instance
+        // 1. Authenticate directly through your secure Supabase Instance
         const { data, error: authError } = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
         });
 
-        setIsLoading(false);
-
         if (authError) {
+            setIsLoading(false);
             setError(authError.message || 'Access Denied: Invalid admin credentials.');
-        } else if (data?.user) {
+            return;
+        }
+
+        // 2. Check if the user has the 'admin' role in their metadata
+        const userRole = data?.user?.user_metadata?.role; 
+
+        if (userRole === 'admin') {
+            setIsLoading(false);
             onLoginSuccess(); // Fires true outcome to Parent App
+        } else {
+            // 3. Force logout if they are a regular user trying to access the admin panel
+            await supabase.auth.signOut();
+            setIsLoading(false);
+            setError('Access Denied: You do not have administrator privileges.');
         }
     };
 

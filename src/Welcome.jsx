@@ -1,223 +1,242 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react'; 
+import { useNavigate } from "react-router-dom"; 
 import { createClient } from '@supabase/supabase-js'; 
-import './Welcome.css';
+import './Welcome.css'; 
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL; 
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY; 
+const supabase = createClient(supabaseUrl, supabaseAnonKey); 
 
-const Welcome = () => {
-    const navigate = useNavigate();
+const Welcome = () => { 
+  const navigate = useNavigate(); 
+  
+  const headingOptions = [ 
+    "New Arrivals: Global Drop '26", 
+    "Just In: Minimalist Aesthetics", 
+    "Fresh Collection: Borderless Style", 
+    "Now Live: Premium Essentials" 
+  ]; 
+  
+  const [currentHeading, setCurrentHeading] = useState(headingOptions[0]); 
+  const [fadeState, setFadeState] = useState('fade-in'); 
+  const [viewMode, setViewMode] = useState('storefront'); 
+  const [activeStockIndex, setActiveStockIndex] = useState(0); 
+  const [stocks, setStocks] = useState([]); 
+  const [loading, setLoading] = useState(true); 
 
-    const headingOptions = [
-        "New Arrivals: Global Drop '26",
-        "Just In: Minimalist Aesthetics",
-        "Fresh Collection: Borderless Style",
-        "Now Live: Premium Essentials"
-    ];
+  useEffect(() => { 
+    async function fetchStorefrontData() { 
+      try { 
+        const { data: stocksData, error: stocksError } = await supabase 
+          .from('stocks') 
+          .select('id, slug, title, brand, category, description, colors, sizes, moq, fabric, photos, video_url, status, expiry_date'); 
+        
+        if (stocksError) throw stocksError; 
 
-    const [currentHeading, setCurrentHeading] = useState(headingOptions[0]);
-    const [fadeState, setFadeState] = useState('fade-in');
-    const [viewMode, setViewMode] = useState('storefront');
-    const [activeLookIndex, setActiveLookIndex] = useState(0);
+        if (stocksData) {
+          const mappedStocks = stocksData.map(item => {
+            let finalImageUrl = '';
+            let rawPhotos = [];
 
-    const [newArrivals, setNewArrivals] = useState([]);
-    const [lookbookItems, setLookbookItems] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        async function fetchStorefrontData() {
-            try {
-                // 1. Fetch data from your 'products' table (only including valid columns)
-                const { data: productsData, error: productsError } = await supabase
-                    .from('products') 
-                    .select('id, title, tag, image_url, description'); // description added safely here
-
-                if (productsError) throw productsError;
-
-                if (productsData) {
-                    const mappedProducts = productsData.map(item => {
-                        let finalImageUrl = item.image_url;
-
-                        if (item.image_url && !item.image_url.startsWith('http')) {
-                            const { data } = supabase.storage
-                                .from('images')
-                                .getPublicUrl(item.image_url);
-                            
-                            finalImageUrl = data.publicUrl;
-                        }
-
-                        return {
-                            id: item.id,
-                            title: item.title,
-                            tag: item.tag || "New",
-                            image: finalImageUrl,
-                            description: item.description // Map description dynamically from the DB
-                        };
-                    });
-
-                    setNewArrivals(mappedProducts);
-                }
-
-                // 2. Fetch lookbook slider records from 'lookbook_table'
-                const { data: lookData, error: lookError } = await supabase
-                    .from('lookbook_table') 
-                    .select('title, description, image_url'); 
-
-                if (lookError) throw lookError;
-
-                if (lookData) {
-                    setLookbookItems(lookData.map(look => {
-                        let finalLookUrl = look.image_url;
-                        
-                        if (look.image_url && !look.image_url.startsWith('http')) {
-                            const { data } = supabase.storage
-                                .from('images')
-                                .getPublicUrl(look.image_url);
-                            
-                            finalLookUrl = data.publicUrl;
-                        }
-
-                        return {
-                            title: look.title,
-                            desc: look.description, 
-                            image: finalLookUrl
-                        };
-                    }));
-                }
-
-            } catch (error) {
-                console.error("Database connection error:", error.message);
-            } finally {
-                setLoading(false);
+            // 1. Safely normalize photos collection down to a functional Array
+            if (Array.isArray(item.photos)) {
+              rawPhotos = item.photos;
+            } else if (typeof item.photos === 'string') {
+              try {
+                rawPhotos = JSON.parse(item.photos);
+              } catch {
+                rawPhotos = item.photos ? [item.photos] : [];
+              }
             }
-        }
 
-        fetchStorefrontData();
-    }, []);
+            // 2. Map structural public links out for every asset stored inside the array
+            const resolvedImages = rawPhotos.map((photo) => {
+              if (!photo) return null;
+              if (photo.startsWith('http')) {
+                return photo;
+              } else {
+                const { data } = supabase.storage 
+                  .from('images') 
+                  .getPublicUrl(photo); 
+                return data.publicUrl; 
+              }
+            }).filter(Boolean);
 
-    useEffect(() => {
-        if (viewMode !== 'storefront') return;
-        const interval = setInterval(() => {
-            setFadeState('fade-out');
-            setTimeout(() => {
-                setCurrentHeading(prev => {
-                    const currentIndex = headingOptions.indexOf(prev);
-                    const nextIndex = (currentIndex + 1) % headingOptions.length;
-                    return headingOptions[nextIndex];
-                });
-                setFadeState('fade-in');
-            }, 300);
-        }, 5000);
-        return () => clearInterval(interval);
-    }, [viewMode]);
+            // Add the video link to the media library array if it exists
+            if (item.video_url) {
+              resolvedImages.push(item.video_url);
+            }
 
-    const nextLook = () => {
-        if (lookbookItems.length === 0) return;
-        setActiveLookIndex((prev) => (prev + 1) % lookbookItems.length);
-    };
+            // Fallback default image structural check 
+            finalImageUrl = resolvedImages[0] || "/assets/placeholder.jpeg";
 
-    const prevLook = () => {
-        if (lookbookItems.length === 0) return;
-        setActiveLookIndex((prev) => (prev - 1 + lookbookItems.length) % lookbookItems.length);
-    };
+            return { 
+              id: item.id, 
+              slug: item.slug,
+              title: item.title, 
+              brand: item.brand,
+              category: item.category,
+              description: item.description,
+              colors: item.colors,
+              sizes: item.sizes,
+              moq: item.moq,
+              fabric: item.fabric,
+              videoUrl: item.video_url,
+              status: item.status,
+              expiry: item.expiry_date,
+              image: finalImageUrl,
+              images: resolvedImages.length > 0 ? resolvedImages : [finalImageUrl] // Handled Array compilation payload
+            }; 
+          }); 
 
-    const currentLook = lookbookItems[activeLookIndex];
+          setStocks(mappedStocks); 
+        } 
+      } catch (error) { 
+        console.error("Database connection error:", error.message); 
+      } finally { 
+        setLoading(false); 
+      } 
+    } 
 
-    if (loading) {
-        return <div className="storefront-container" style={{ color: '#fff', padding: '3rem' }}>Syncing with Storefront...</div>;
-    }
+    fetchStorefrontData(); 
+  }, []); 
 
-    return (
-        <div className="storefront-container">
-            {viewMode === 'storefront' ? (
-                <div className="view-fade-wrapper">
-                    <header className="hero-banner">
-                        <div className="hero-overlay">
-                            <span className="hero-subtitle">GLOBAL COUTURE</span>
-                            <blockquote className="brand-quote">
-                                "Fashion is a universal language. We weave comfort, culture, and timeless luxury into garments that speak to the world."
-                            </blockquote>
-                            <button className="hero-btn" onClick={() => { setViewMode('lookbook'); setActiveLookIndex(0); }}>
-                                View All New Stocks
-                            </button>
-                        </div>
-                    </header>
+  // Heading rotator interval
+  useEffect(() => { 
+    if (viewMode !== 'storefront') return; 
+    
+    const interval = setInterval(() => { 
+      setFadeState('fade-out'); 
+      setTimeout(() => { 
+        setCurrentHeading(prev => { 
+          const currentIndex = headingOptions.indexOf(prev); 
+          const nextIndex = (currentIndex + 1) % headingOptions.length; 
+          return headingOptions[nextIndex]; 
+        }); 
+        setFadeState('fade-in'); 
+      }, 300); 
+    }, 5000); 
 
-                    <section className="catalog-section">
-                        <div className="section-header">
-                            <h1 className={`dynamic-h1 ${fadeState}`}>{currentHeading}</h1>
-                        </div>
+    return () => clearInterval(interval); 
+  }, [viewMode]); 
 
-                        <div className="products-grid">
-                            {newArrivals.map((item, index) => (
-                                <div
-                                    key={item.id}
-                                    className="product-card"
-                                    style={{ animationDelay: `${index * 0.05}s` }}
-                                    onClick={() =>
-                                        navigate("/StockDetails", {
-                                            state: {
-                                                image: item.image, 
-                                                title: item.title,
-                                                tag: item.tag,
-                                                description: item.description // Forwarding description to details page
-                                            },
-                                        })
-                                    }
-                                >
-                                    <div className="image-wrapper">
-                                        <span className="product-badge">{item.tag}</span>
-                                        <img src={item.image} alt={item.title} className="product-img" />
-                                    </div>
-                                    <div className="product-details">
-                                        <h3 className="product-title">{item.title}</h3>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                </div>
-            ) : (
-                <div className="fullscreen-lookbook-view">
-                    <div className="lookbook-top-bar">
-                        <button className="minimal-close-btn" onClick={() => setViewMode('storefront')}>
-                            ✕ Close
-                        </button>
-                        <div className="lookbook-pagination">
-                            0{activeLookIndex + 1} <span>/ 0{lookbookItems.length}</span>
-                        </div>
-                    </div>
+  const nextStock = () => { 
+    if (stocks.length === 0) return; 
+    setActiveStockIndex((prev) => (prev + 1) % stocks.length); 
+  }; 
 
-                    {currentLook ? (
-                        <div className="lookbook-magazine-stage" key={activeLookIndex}>
-                            <div className="magazine-media-pane">
-                                <img src={currentLook.image} alt={currentLook.title} className="magazine-img" />
-                            </div>
+  const prevStock = () => { 
+    if (stocks.length === 0) return; 
+    setActiveStockIndex((prev) => (prev - 1 + stocks.length) % stocks.length); 
+  }; 
 
-                            <div className="magazine-content-pane">
-                                <div className="content-inner-wrapper">
-                                    <span className="textile-spec-badge">TEXTILE SPECIFICATION</span>
-                                    <h1 className="magazine-cloth-title">{currentLook.title}</h1>
-                                    <p className="magazine-cloth-desc">{currentLook.desc}</p>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <div style={{ color: '#fff', textAlign: 'center', marginTop: '20vh' }}>No Lookbook entries setup.</div>
-                    )}
+  const currentStockLook = stocks[activeStockIndex]; 
 
-                    <button className="nav-arrow-control prev-arrow" onClick={prevLook} aria-label="Previous look">
-                        ‹
-                    </button>
-                    <button className="nav-arrow-control next-arrow" onClick={nextLook} aria-label="Next look">
-                        ›
-                    </button>
-                </div>
-            )}
-        </div>
-    );
-};
+  if (loading) { 
+    return <div className="storefront-container" style={{ color: '#fff', padding: '3rem' }}>Syncing with Storefront...</div>; 
+  } 
+
+  return ( 
+    <div className="storefront-container"> 
+      {viewMode === 'storefront' ? ( 
+        <div className="view-fade-wrapper"> 
+          <header className="hero-banner"> 
+            <div className="hero-overlay"> 
+              <span className="hero-subtitle">GLOBAL COUTURE</span> 
+              <blockquote className="brand-quote"> 
+                "Fashion is a universal language. We weave comfort, culture, and timeless luxury into garments that speak to the world." 
+              </blockquote> 
+              <button className="hero-btn" onClick={() => { setViewMode('lookbook'); setActiveStockIndex(0); }}> 
+                View All New Stocks
+              </button> 
+            </div> 
+          </header> 
+
+          <section className="catalog-section"> 
+            <div className="section-header"> 
+              <h1 className={`dynamic-h1 ${fadeState}`}>{currentHeading}</h1> 
+            </div> 
+            
+            <div className="products-grid"> 
+              {stocks.map((item, index) => ( 
+                <div 
+                  key={item.id} 
+                  className="product-card" 
+                  style={{ animationDelay: `${index * 0.05}s` }} 
+                  onClick={() => navigate(`/stockDetails/${item.slug}`, { 
+                    state: { 
+                      id: item.id,
+                      slug: item.slug,
+                      image: item.image, 
+                      images: item.images, // Transmitting complete asset collection state safely downstream
+                      title: item.title, 
+                      brand: item.brand,
+                      category: item.category,
+                      description: item.description,
+                      colors: item.colors,
+                      sizes: item.sizes,
+                      moq: item.moq,
+                      fabric: item.fabric,
+                      videoUrl: item.videoUrl,
+                      status: item.status,
+                      expiry: item.expiry
+                    }, 
+                  })} 
+                > 
+                  <div className="image-wrapper"> 
+                    <span className="product-badge">{item.brand || item.category || "New"}</span> 
+                    {item.image && <img src={item.image} alt={item.title} className="product-img" />} 
+                  </div> 
+                  <div className="product-details"> 
+                    <h3 className="product-title">{item.title}</h3> 
+                    {item.moq && <p className="product-moq" style={{ fontSize: '0.85rem', opacity: 0.7 }}>MOQ: {item.moq}</p>} 
+                  </div> 
+                </div> 
+              ))} 
+            </div> 
+          </section> 
+        </div> 
+      ) : ( 
+        <div className="fullscreen-lookbook-view"> 
+          <div className="lookbook-top-bar"> 
+            <button className="minimal-close-btn" onClick={() => setViewMode('storefront')}> 
+              ✕ Close 
+            </button> 
+            <div className="lookbook-pagination"> 
+              0{activeStockIndex + 1} <span>/ 0{stocks.length}</span> 
+            </div> 
+          </div> 
+
+          {currentStockLook ? ( 
+            <div className="lookbook-magazine-stage" key={activeStockIndex}> 
+              <div className="magazine-media-pane"> 
+                <img src={currentStockLook.image} alt={currentStockLook.title} className="magazine-img" /> 
+              </div> 
+              <div className="magazine-content-pane"> 
+                <div className="content-inner-wrapper"> 
+                  <span className="textile-spec-badge">{currentStockLook.fabric || 'TEXTILE SPECIFICATION'}</span> 
+                  <h1 className="magazine-cloth-title">{currentStockLook.title}</h1> 
+                  <p className="magazine-cloth-desc">{currentStockLook.description}</p>
+                  
+                  <div className="technical-details" style={{ marginTop: '1.5rem', fontSize: '0.9rem', lineHeight: '1.6rem' }}>
+                    {currentStockLook.brand && <div><strong>Brand:</strong> {currentStockLook.brand}</div>}
+                    {currentStockLook.colors && <div><strong>Colors:</strong> {currentStockLook.colors}</div>}
+                    {currentStockLook.sizes && <div><strong>Sizes:</strong> {currentStockLook.sizes}</div>}
+                    {currentStockLook.moq && <div><strong>Minimum Order (MOQ):</strong> {currentStockLook.moq}</div>}
+                  </div>
+                </div> 
+              </div> 
+            </div> 
+          ) : ( 
+            <div style={{ color: '#fff', textAlign: 'center', marginTop: '20vh' }}>No active stock records found.</div> 
+          )} 
+
+          <button className="nav-arrow-control prev-arrow" onClick={prevStock} aria-label="Previous look"> ‹ </button> 
+          <button className="nav-arrow-control next-arrow" onClick={nextStock} aria-label="Next look"> › </button> 
+        </div> 
+      )} 
+    </div> 
+  ); 
+}; 
 
 export default Welcome;

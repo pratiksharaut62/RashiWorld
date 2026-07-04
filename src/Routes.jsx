@@ -8,12 +8,13 @@ import AdminDashboard from "./AdminDashboard";
 const AppRoutes = () => {
     return (
         <Routes>
-            {/* 1. Make Home the PARENT route. It will always stay on screen. */}
+            {/* 1. Home is the PARENT route. It stays on screen and provides the <Outlet /> */}
             <Route path="/" element={<Home />}>
                 
-                {/* 2. These are CHILD routes. They will load inside Home's <Outlet /> */}                
+                {/* 2. These are CHILD routes. They load inside Home's <Outlet /> */}                
                 <Route index element={<Welcome />} /> 
-                <Route path="stockDetails" element={<StockDetails />} />
+                {/* Updated path to accept a dynamic product slug */}
+                <Route path="stockDetails/:slug" element={<StockDetails />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="adminDashboard" element={<AdminDashboard />} />
                 

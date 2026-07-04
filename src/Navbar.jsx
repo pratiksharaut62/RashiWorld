@@ -12,7 +12,6 @@ const Navbar = () => {
                 {/* Nested text container to clean up stacking and center alignment */}
                 <div className="nav-brand-text">
                     <h1 className="brand-text">Rashi Worldwide</h1>
-                    <p className="brand-slogan">anything anytime anywhere</p>
                 </div>
             </div>
 
@@ -20,9 +19,9 @@ const Navbar = () => {
             {/* FIXED: Swapped out all <a> href tags for optimized <Link> components */}
             <ul className="ul">
                 <li><Link to="/">Home</Link></li>
-                <li><Link to="/stockDetails">Stock Details</Link></li>
+                
                 <li><Link to="/contact">Contact</Link></li>
-                <li><Link to="/adminDashboard">Admin</Link></li>
+                
             </ul>
         </nav>
     );

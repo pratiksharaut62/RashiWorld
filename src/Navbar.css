@@ -64,11 +64,7 @@
   display: inline-flex;
   align-items: center;
 }
-.brand-slogan {
-  color:#E84D0E ;
-  font-weight: 600;
-  font-size: smaller;
-}
+
 
 .nav-logo {
   display: flex;

@@ -22,19 +22,57 @@
 }
 
 .main-display-box.premium-shadow {
+    position: relative; /* Crucial anchor for absolute arrow positioning */
     background: #fafafa;
     border-radius: 12px;
     border: 1px solid #efefef;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    
+    /* ⚡ FIX: Forces container stability. Center point remains static across images. */
+    height: 550px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .active-media {
     width: 100%;
-    height: auto;
-    max-height: 580px;
-    object-fit: cover;
+    height: 100%; /* ⚡ FIX: Matches container bounds precisely */
+    object-fit: contain; /* ⚡ FIX: Letterboxes uneven ratios smoothly without shifting container elements */
     display: block;
+}
+
+/* Inline Main Media Overlay Controls */
+.gallery-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.4); /* Enhanced visibility contrast edge layer */
+    color: #ffffff;
+    border: none;
+    font-size: 2.2rem;
+    line-height: 1;
+    padding: 16px 14px;
+    cursor: pointer;
+    z-index: 10;
+    transition: background 0.2s ease, color 0.2s ease;
+    user-select: none;
+}
+
+.gallery-nav-btn:hover {
+    background: rgba(0, 0, 0, 0.85);
+    color: #d4af37; /* Matches premium brand gold highlight */
+}
+
+.prev-btn {
+    left: 0;
+    border-radius: 0 6px 6px 0;
+}
+
+.next-btn {
+    right: 0;
+    border-radius: 6px 0 0 6px;
 }
 
 /* Detailed Technical Specs Stack */
@@ -109,12 +147,12 @@
     margin-top: 10px;
 }
 
-/* Refined Clean Text CTA (WhatsApp Icon Removed) */
+/* Refined Clean Text CTA */
 .clean-text-action-btn {
     display: block;
     width: 100%;
     text-align: center;
-    background: #111111; /* Clean high-fashion premium dark backdrop */
+    background: #111111;
     color: #ffffff;
     padding: 16px 32px;
     font-size: 1.05rem;
@@ -130,6 +168,111 @@
     background: #2a2a2a;
 }
 
+/* Gallery Layout */
+.media-gallery-grid {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.gallery-thumb-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.gallery-thumb-wrapper:hover, 
+.gallery-thumb-wrapper.active-thumb {
+    border-color: #d4af37;
+    transform: translateY(-2px);
+}
+
+.gallery-thumb-img, .video-thumb-placeholder {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.video-thumb-placeholder {
+    background: #1a1a1a;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* Supabase Specs Table Grid */
+.specs-container {
+    margin: 20px 0;
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #eaeaea;
+}
+
+.specs-container h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #333;
+}
+
+.specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+.spec-item {
+    display: flex;
+    flex-direction: column;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.spec-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #777;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.spec-value {
+    font-size: 14px;
+    color: #222;
+    font-weight: 500;
+}
+
+.highlight-value {
+    color: #b8860b;
+    font-weight: 700;
+}
+
+.expiry-text {
+    color: #c0392b;
+}
+
+.brand-badge {
+    background: #f1f5f9;
+    color: #334155;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-left: 8px;
+    text-transform: uppercase;
+}
+
 /* Responsive Scaling Overrides */
 @media (max-width: 900px) {
     .stock-main-layout.standard-split {
@@ -140,4 +283,100 @@
         position: relative;
         top: 0;
     }
+    .main-display-box.premium-shadow {
+        height: 420px; /* ⚡ Dynamic scale down for standard mobile viewports */
+    }
+    .gallery-nav-btn {
+        font-size: 1.8rem;
+        padding: 8px 12px;
+    }
+}
+/* Container adjustments to allow floating items */
+.main-display-box {
+  position: relative;
+}
+
+/* Camera Zoom Icon Button Configuration - Positioned to the Right Corner */
+.zoom-trigger-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px; /* Placed cleanly on the opposite right side */
+  z-index: 15;
+  background: rgba(255, 255, 255, 0.9);
+  color: #000000; /* Color matching the icon artwork */
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.zoom-trigger-btn:hover {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 1);
+}
+
+/* Vector SVG Camera dimensions matching the uploaded asset style */
+.camera-svg-icon {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+/* --- Rest of your Lightbox backdrop and presentation styling remains unchanged --- */
+.lightbox-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.lightbox-content-holder {
+  max-width: 90%;
+  max-height: 85%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox-zoomed-media {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: 25px;
+  right: 35px;
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.lightbox-close-btn:hover {
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
