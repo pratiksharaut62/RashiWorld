@@ -455,3 +455,84 @@ body {
   .prev-arrow { left: 2rem; }
   .next-arrow { right: 2rem; }
 }
+/* ==========================================
+   VIEW DETAILS BUTTON (Inside Product Card)
+   ========================================== */
+.view-details-btn {
+  background-color: transparent;
+  color: #fff;
+  /* Premium thin border with 12px rounding */
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px; 
+  
+  padding: 0.6rem 1.2rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 0.75rem;
+  
+  /* Smooth transition for background, colors, and shadows */
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.view-details-btn:hover {
+  background-color: #fff;
+  color: #000;
+  border-color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.view-details-btn:active {
+  transform: translateY(1px);
+}
+
+
+/* ==========================================
+   LOAD MORE BUTTON (Catalog Section)
+   ========================================== */
+.load-more-btn {
+  /* Dynamic gradient using standard premium company styling (dark to sleek accents) */
+  background: linear-gradient(135deg, #111111 0%, #222222 100%);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  
+  padding: 1rem 3rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  
+  /* Interactive animations */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.load-more-btn:hover {
+  background: linear-gradient(135deg, #fff 0%, #f0f0f0 100%);
+  color: #000;
+  border-color: #fff;
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+}
+
+/* Subtle pulse animation effect while waiting to be clicked */
+.load-more-container {
+  text-align: center;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
+  animation: svelte-pulse 3s infinite ease-in-out;
+}
+
+@keyframes svelte-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.01); }
+  100% { transform: scale(1); }
+}

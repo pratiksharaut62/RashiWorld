@@ -23,6 +23,9 @@ const Welcome = () => {
   const [activeStockIndex, setActiveStockIndex] = useState(0); 
   const [stocks, setStocks] = useState([]); 
   const [loading, setLoading] = useState(true); 
+  
+  // New state to manage the limit of visible items
+  const [visibleCount, setVisibleCount] = useState(6); 
 
   useEffect(() => { 
     async function fetchStorefrontData() { 
@@ -38,7 +41,6 @@ const Welcome = () => {
             let finalImageUrl = '';
             let rawPhotos = [];
 
-            // 1. Safely normalize photos collection down to a functional Array
             if (Array.isArray(item.photos)) {
               rawPhotos = item.photos;
             } else if (typeof item.photos === 'string') {
@@ -49,7 +51,6 @@ const Welcome = () => {
               }
             }
 
-            // 2. Map structural public links out for every asset stored inside the array
             const resolvedImages = rawPhotos.map((photo) => {
               if (!photo) return null;
               if (photo.startsWith('http')) {
@@ -62,12 +63,10 @@ const Welcome = () => {
               }
             }).filter(Boolean);
 
-            // Add the video link to the media library array if it exists
             if (item.video_url) {
               resolvedImages.push(item.video_url);
             }
 
-            // Fallback default image structural check 
             finalImageUrl = resolvedImages[0] || "/assets/placeholder.jpeg";
 
             return { 
@@ -85,7 +84,7 @@ const Welcome = () => {
               status: item.status,
               expiry: item.expiry_date,
               image: finalImageUrl,
-              images: resolvedImages.length > 0 ? resolvedImages : [finalImageUrl] // Handled Array compilation payload
+              images: resolvedImages.length > 0 ? resolvedImages : [finalImageUrl]
             }; 
           }); 
 
@@ -101,7 +100,6 @@ const Welcome = () => {
     fetchStorefrontData(); 
   }, []); 
 
-  // Heading rotator interval
   useEffect(() => { 
     if (viewMode !== 'storefront') return; 
     
@@ -130,11 +128,37 @@ const Welcome = () => {
     setActiveStockIndex((prev) => (prev - 1 + stocks.length) % stocks.length); 
   }; 
 
+  // Helper navigation to use for both full card click or explicit button click
+  const handleViewDetails = (item) => {
+    navigate(`/stockDetails/${item.slug}`, { 
+      state: { 
+        id: item.id,
+        slug: item.slug,
+        image: item.image, 
+        images: item.images, 
+        title: item.title, 
+        brand: item.brand,
+        category: item.category,
+        description: item.description,
+        colors: item.colors,
+        sizes: item.sizes,
+        moq: item.moq,
+        fabric: item.fabric,
+        videoUrl: item.videoUrl,
+        status: item.status,
+        expiry: item.expiry
+      }, 
+    });
+  };
+
   const currentStockLook = stocks[activeStockIndex]; 
 
   if (loading) { 
     return <div className="storefront-container" style={{ color: '#fff', padding: '3rem' }}>Syncing with Storefront...</div>; 
   } 
+
+  // Slice the data to show only up to the specified dynamic visibility count
+  const displayedStocks = stocks.slice(0, visibleCount);
 
   return ( 
     <div className="storefront-container"> 
@@ -158,30 +182,12 @@ const Welcome = () => {
             </div> 
             
             <div className="products-grid"> 
-              {stocks.map((item, index) => ( 
+              {displayedStocks.map((item, index) => ( 
                 <div 
                   key={item.id} 
                   className="product-card" 
                   style={{ animationDelay: `${index * 0.05}s` }} 
-                  onClick={() => navigate(`/stockDetails/${item.slug}`, { 
-                    state: { 
-                      id: item.id,
-                      slug: item.slug,
-                      image: item.image, 
-                      images: item.images, // Transmitting complete asset collection state safely downstream
-                      title: item.title, 
-                      brand: item.brand,
-                      category: item.category,
-                      description: item.description,
-                      colors: item.colors,
-                      sizes: item.sizes,
-                      moq: item.moq,
-                      fabric: item.fabric,
-                      videoUrl: item.videoUrl,
-                      status: item.status,
-                      expiry: item.expiry
-                    }, 
-                  })} 
+                  onClick={() => handleViewDetails(item)} 
                 > 
                   <div className="image-wrapper"> 
                     <span className="product-badge">{item.brand || item.category || "New"}</span> 
@@ -189,11 +195,34 @@ const Welcome = () => {
                   </div> 
                   <div className="product-details"> 
                     <h3 className="product-title">{item.title}</h3> 
-                    {item.moq && <p className="product-moq" style={{ fontSize: '0.85rem', opacity: 0.7 }}>MOQ: {item.moq}</p>} 
+                    {item.moq && <p className="product-moq" style={{ fontSize: '0.85rem', opacity: 0.7, marginBottom: '0.75rem' }}>MOQ: {item.moq}</p>} 
+                    
+                    {/* Explicit View Details Button */}
+                    <button 
+                      className="view-details-btn" 
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevents double-triggering card's wrapper onClick
+                        handleViewDetails(item);
+                      }}
+                    >
+                      View Details
+                    </button>
                   </div> 
                 </div> 
               ))} 
             </div> 
+
+            {/* Load More Button Wrapper */}
+            {stocks.length > visibleCount && (
+              <div className="load-more-container" style={{ textAlign: 'center', marginTop: '3rem' }}>
+                <button 
+                  className="load-more-btn" 
+                  onClick={() => setVisibleCount(stocks.length)}
+                >
+                  Load More Items ({stocks.length - visibleCount} )
+                </button>
+              </div>
+            )}
           </section> 
         </div> 
       ) : ( 
@@ -223,7 +252,7 @@ const Welcome = () => {
                     {currentStockLook.colors && <div><strong>Colors:</strong> {currentStockLook.colors}</div>}
                     {currentStockLook.sizes && <div><strong>Sizes:</strong> {currentStockLook.sizes}</div>}
                     {currentStockLook.moq && <div><strong>Minimum Order (MOQ):</strong> {currentStockLook.moq}</div>}
-                  </div>
+                  </div> 
                 </div> 
               </div> 
             </div> 
