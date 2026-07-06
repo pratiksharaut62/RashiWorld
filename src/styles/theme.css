@@ -1,0 +1,205 @@
+/* ==========================================================================
+   Rashi Worldwide — Global Theme
+   Premium minimal: white canvas, ink text, orange accent.
+   Single source of truth for design tokens. Imported once in App.jsx.
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  /* Typography */
+  --font-main: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  /* Brand accent (orange) */
+  --brand: #E84D0E;
+  --brand-hover: #C63D06;
+  --brand-soft: rgba(232, 77, 14, 0.08);
+  --brand-ring: rgba(232, 77, 14, 0.35);
+
+  /* Ink / neutrals */
+  --ink: #141414;          /* headings / near-black */
+  --ink-2: #2A2A2A;        /* strong body */
+  --text: #4A4A4A;         /* body text */
+  --muted: #8A8A8A;        /* secondary text */
+  --faint: #B4B4B4;        /* tertiary / disabled */
+
+  /* Surfaces */
+  --bg: #FFFFFF;           /* page */
+  --surface: #FFFFFF;      /* cards */
+  --surface-2: #FAFAFA;    /* subtle panels */
+  --border: #ECECEC;       /* hairlines */
+  --border-strong: #DADADA;
+
+  /* Utility */
+  --success: #25D366;      /* whatsapp green */
+  --danger: #C0392B;
+
+  /* Radius */
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* Elevation */
+  --shadow-sm: 0 1px 2px rgba(20, 20, 20, 0.04), 0 1px 3px rgba(20, 20, 20, 0.06);
+  --shadow-md: 0 8px 24px -8px rgba(20, 20, 20, 0.12), 0 4px 8px -4px rgba(20, 20, 20, 0.06);
+  --shadow-lg: 0 24px 48px -12px rgba(20, 20, 20, 0.18);
+
+  /* Motion */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 0.18s var(--ease);
+  --t: 0.28s var(--ease);
+
+  /* Layout */
+  --container: 1200px;
+  --nav-h: 72px;
+
+  color-scheme: light;
+}
+
+/* ---- Base reset ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
+  color: var(--ink);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+p { margin: 0; }
+
+a { color: inherit; }
+
+img { max-width: 100%; display: block; }
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   Reusable button system
+   ========================================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 0.8rem 1.6rem;
+  border-radius: var(--r-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--t-fast), color var(--t-fast),
+              border-color var(--t-fast), transform var(--t-fast),
+              box-shadow var(--t-fast);
+  white-space: nowrap;
+}
+
+.btn:active { transform: translateY(1px); }
+
+/* Primary — orange */
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 6px 16px -6px var(--brand-ring);
+}
+.btn-primary:hover {
+  background: var(--brand-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px -8px var(--brand-ring);
+}
+
+/* Dark — ink */
+.btn-dark {
+  background: var(--ink);
+  color: #fff;
+}
+.btn-dark:hover {
+  background: #000;
+  transform: translateY(-2px);
+}
+
+/* Secondary — outline */
+.btn-outline {
+  background: transparent;
+  color: var(--ink);
+  border-color: var(--border-strong);
+}
+.btn-outline:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.btn-block { width: 100%; }
+
+/* ==========================================================================
+   Skeleton loading shimmer
+   ========================================================================== */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: #f0f0f0;
+  border-radius: var(--r-sm);
+}
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.7), transparent);
+  animation: skeleton-shimmer 1.4s infinite;
+}
+@keyframes skeleton-shimmer {
+  100% { transform: translateX(100%); }
+}
+
+/* ==========================================================================
+   Shared section rhythm
+   ========================================================================== */
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

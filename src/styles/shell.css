@@ -1,0 +1,260 @@
+/* ==========================================================================
+   App shell layout (uses global tokens from theme.css)
+   ========================================================================== */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+}
+
+.page-content {
+    flex: 1;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.app-footer {
+    background: var(--ink);
+    color: #cfcfcf;
+    padding: 3rem 2rem 1.5rem;
+    margin-top: 4rem;
+}
+
+.footer-top {
+    max-width: var(--container);
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-wrap: wrap;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.footer-logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.01em;
+}
+
+.footer-blurb {
+    margin-top: 0.6rem;
+    max-width: 420px;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: #9a9a9a;
+}
+
+.footer-cols {
+    display: flex;
+    gap: 3.5rem;
+    flex-wrap: wrap;
+}
+
+.footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.footer-col-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand);
+    margin-bottom: 0.2rem;
+}
+
+.footer-nav a {
+    color: #cfcfcf;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 500;
+    transition: color var(--t-fast);
+}
+
+.footer-nav a:hover {
+    color: var(--brand);
+}
+
+.footer-bottom {
+    max-width: var(--container);
+    margin: 1.5rem auto 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+    color: #7c7c7c;
+}
+
+.footer-tagline {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.7rem;
+    color: var(--brand);
+    font-weight: 700;
+}
+
+/* ==========================================================================
+   Floating contact button — expands into WhatsApp / Instagram / Call
+   ========================================================================== */
+.contact-fab-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1390;
+    background: transparent;
+}
+
+.contact-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 1401;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+.contact-fab-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.6rem;
+    margin-bottom: 0.25rem;
+}
+
+.contact-fab-option {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: #fff;
+    border-radius: var(--r-pill);
+    padding: 0.5rem 0.5rem 0.5rem 0.9rem;
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 0.85rem;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(10px) scale(0.9);
+    pointer-events: none;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    transition-delay: var(--fab-delay, 0s);
+}
+
+.contact-fab.is-open .contact-fab-option {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.contact-fab-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--fab-color, var(--brand));
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.contact-fab-icon svg {
+    width: 19px;
+    height: 19px;
+}
+
+.contact-fab-label {
+    white-space: nowrap;
+    padding-right: 0.25rem;
+}
+
+.contact-fab-trigger {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: var(--brand);
+    color: #fff;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--t-fast), box-shadow var(--t-fast), background var(--t-fast);
+}
+
+.contact-fab-trigger:hover {
+    transform: scale(1.06) translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.contact-fab.is-open .contact-fab-trigger {
+    background: var(--ink);
+}
+
+.fab-icon {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    transition: opacity 0.22s ease, transform 0.22s ease;
+}
+
+.fab-icon-chat {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+.fab-icon-close {
+    opacity: 0;
+    transform: scale(0.5) rotate(-45deg);
+}
+
+.contact-fab.is-open .fab-icon-chat {
+    opacity: 0;
+    transform: scale(0.5) rotate(45deg);
+}
+
+.contact-fab.is-open .fab-icon-close {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+}
+
+@media (max-width: 640px) {
+    .app-footer {
+        padding: 2.5rem 1.25rem 1.25rem;
+    }
+
+    .footer-top {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .contact-fab {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .contact-fab-trigger {
+        width: 52px;
+        height: 52px;
+    }
+
+    .contact-fab-label {
+        display: none;
+    }
+
+    .contact-fab-option {
+        padding: 0.55rem;
+    }
+}

@@ -1,0 +1,178 @@
+/* ==========================================================================
+   Contact — premium minimal. Tokens from theme.css.
+   ========================================================================== */
+.contact-page-wrapper {
+  background: var(--bg);
+  min-height: calc(100vh - var(--nav-h));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1.5rem;
+}
+
+/* Header */
+.contact-hero-panel {
+  text-align: center;
+  max-width: 600px;
+  margin-bottom: 3rem;
+  animation: fadeInFlat 0.4s var(--ease);
+}
+
+.contact-brand-tagline {
+  color: var(--brand);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  display: block;
+  margin-bottom: 0.9rem;
+}
+
+.contact-company-title {
+  color: var(--ink);
+  font-size: 2.6rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.contact-blurb-text {
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.6;
+  margin-top: 1rem;
+}
+
+/* Channel rows */
+.contact-links-panel {
+  width: 100%;
+  max-width: 620px;
+  margin-bottom: 2.5rem;
+}
+
+.contact-row-container {
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid var(--ink);
+}
+
+.contact-row-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.4rem 0.75rem;
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--t-fast), padding-left var(--t-fast);
+}
+
+.contact-row-item:hover {
+  background: var(--surface-2);
+  padding-left: 1.25rem;
+}
+
+.row-left-content {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.contact-row-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  transition: transform var(--t-fast);
+}
+
+.contact-row-item:hover .contact-row-icon {
+  transform: scale(1.12);
+}
+
+.row-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.channel-name {
+  color: var(--ink);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.channel-subtitle {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin-top: 2px;
+}
+
+.channel-action {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--muted);
+  transition: color var(--t-fast);
+}
+
+.action-arrow {
+  color: var(--faint);
+  font-size: 1.15rem;
+  transition: transform var(--t-fast), color var(--t-fast);
+}
+
+.contact-row-item:hover .action-text {
+  color: var(--ink);
+}
+
+.contact-row-item:hover .action-arrow {
+  transform: translateX(4px);
+  color: var(--accent-color, var(--brand));
+}
+
+/* Disclaimer */
+.contact-disclaimer-bar {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+  max-width: 520px;
+  opacity: 0.8;
+  line-height: 1.5;
+}
+
+@keyframes fadeInFlat {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 580px) {
+  .contact-page-wrapper {
+    padding: 3rem 1rem;
+  }
+
+  .contact-company-title {
+    font-size: 2rem;
+  }
+
+  .channel-name {
+    font-size: 1.08rem;
+  }
+
+  .channel-subtitle,
+  .channel-action {
+    font-size: 0.85rem;
+  }
+
+  .action-text {
+    display: none;
+  }
+}
